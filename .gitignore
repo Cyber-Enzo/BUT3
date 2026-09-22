@@ -1,0 +1,44 @@
+# =========================
+# Fichiers Jupyter Notebook
+# =========================
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# =========================
+# Fichiers Python (TP R500)
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# =========================
+# Fichiers Système (OS)
+# (Très important pour un travail de groupe)
+# =========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.cab
+Desktop.ini
+
+# Linux
+*~
+.fuse_hidden*
+
+# =========================
+# Fichiers temporaires ou lourds
+# =========================
+*.log
+*.pdf
+*.zip
+*.tar.gz

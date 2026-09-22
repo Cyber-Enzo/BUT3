@@ -54,5 +54,3 @@ git push origin main
 * Utilisez des titres hiérarchisés (`#`, `##`, `###`) pour structurer vos notes.
 * Pour les blocs de code (Cisco, Python, Bash), spécifiez le langage pour activer la coloration syntaxique.
 * **Images :** Si vous devez mettre des captures d'écran, placez-les dans un sous-dossier `img/` à l'intérieur du dossier de votre module, pour ne pas polluer la racine.
-
-*Bon courage à tous pour cette année de BUT 3 ! 💻🛡️*

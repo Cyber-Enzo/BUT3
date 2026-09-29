@@ -1,0 +1,119 @@
+Building configuration...
+
+Current configuration : 2049 bytes
+!
+! Last configuration change at 14:49:26 UTC Tue Sep 29 2026
+! NVRAM config last updated at 14:35:23 UTC Tue Sep 29 2026
+! NVRAM config last updated at 14:35:23 UTC Tue Sep 29 2026
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R10
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+memory-size iomem 15
+!
+ipv6 unicast-routing
+ipv6 cef
+ip source-route
+ip cef
+!
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+crypto pki token default removal timeout 0
+!
+!
+license udi pid CISCO2901/K9 sn FCZ164691RM
+license boot module c2900 technology-package datak9
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ ip address 192.168.250.254 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address 2001:470:C8F2:A190::254/64
+!
+interface GigabitEthernet0/1
+ ip address 172.22.10.1 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address 2001:470:C8F2:A110::1/64
+!
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+ip route 0.0.0.0 0.0.0.0 172.22.10.254
+ip route 192.168.1.0 255.255.255.0 192.168.250.1
+ip route 192.168.100.0 255.255.255.0 192.168.250.1
+ip route 192.168.200.0 255.255.255.0 192.168.250.1
+!
+access-list 1 permit 192.168.0.0 0.0.255.255
+ipv6 route 2001:470:C8F2:A130::/64 2001:470:C8F2:A190::1
+ipv6 route 2001:470:C8F2:A150::/64 2001:470:C8F2:A190::1
+ipv6 route 2001:470:C8F2:A170::/64 2001:470:C8F2:A190::1
+ipv6 route ::/0 GigabitEthernet0/1 FE80::32E4:DBFF:FEB0:4428
+ipv6 route ::/0 GigabitEthernet0/1
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport input all
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+scheduler allocate 20000 1000
+end

@@ -1,71 +1,42 @@
 Building configuration...
 
-Current configuration : 3358 bytes
-!
-! Last configuration change at 02:09:01 UTC Mon Mar 1 1993
+Current configuration : 2129 bytes
 !
 version 12.2
 no service pad
-service timestamps debug datetime msec
-service timestamps log datetime msec
+service timestamps debug uptime
+service timestamps log uptime
 no service password-encryption
 !
 hostname SW10
-!
-boot-start-marker
-boot-end-marker
 !
 !
 no aaa new-model
 system mtu routing 1500
 vtp mode transparent
+ip subnet-zero
 ip routing
-!
 !
 ipv6 unicast-routing
 !
 !
-crypto pki trustpoint TP-self-signed-2901749632
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-2901749632
- revocation-check none
- rsakeypair TP-self-signed-2901749632
-!
-!
-crypto pki certificate chain TP-self-signed-2901749632
- certificate self-signed 01
-  3082023E 308201A7 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
-  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
-  69666963 6174652D 32393031 37343936 3332301E 170D3933 30333031 30303030
-  35395A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
-  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 39303137
-  34393633 3230819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281
-  8100B984 4BED4B9E FF01F781 F8C3A7FC 1A44BE7E 848F1542 55562EB3 EB16FB89
-  FB6E9E43 68C79537 336B564F 65331AFC ECE62035 0C99691C A48F784F 015781A4
-  B82FCC32 88EAFBB5 CF370BDE FC4B44E9 C8B30B75 2BE08147 A360D272 5D48EC92
-  5AAB7846 DAD53D07 E629CF98 25408587 B1690AE4 4C69CC24 98622172 AA252C37
-  40B50203 010001A3 66306430 0F060355 1D130101 FF040530 030101FF 30110603
-  551D1104 0A300882 06537769 74636830 1F060355 1D230418 30168014 864DBB30
-  E84D541E 7AAC4A0D 2B900D80 A9638AEA 301D0603 551D0E04 16041486 4DBB30E8
-  4D541E7A AC4A0D2B 900D80A9 638AEA30 0D06092A 864886F7 0D010104 05000381
-  81003C71 455657C7 932CABA5 4CA6908F C58DB42A 40FC7FAC FB596516 90FFD4D3
-  AD88F556 EABFD48E 29FF3F28 07A26386 581AC5ED 04892A44 1E4FFFEC A289E5D2
-  B00BB496 72024080 FEF45F4F C6EE35E4 1D09D75C 4B209B04 EF94517F 83D86F67
-  AE5E97CE 3747FBCD 607DCACF 07266840 24F010EF 2DAD9258 05C00A2F 91B1C567 264A
-        quit
 !
 !
 !
+no file verify auto
 spanning-tree mode pvst
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
 !
-vlan 100,200,250
+vlan 100
+ name VLAN100
 !
+vlan 200
+ name VLAN200
 !
-!
-!
+vlan 250
+ name INTERCO
 !
 !
 interface FastEthernet0/1
@@ -104,11 +75,13 @@ interface Vlan1
 !
 interface Vlan100
  ip address 192.168.100.1 255.255.255.0
+ ip access-group VLAN100-IN in
  ip helper-address 192.168.1.2
  ipv6 address 2001:470:C8F2:A150::1/64
 !
 interface Vlan200
  ip address 192.168.200.1 255.255.255.0
+ ip access-group VLAN200-IN in
  ip helper-address 192.168.1.2
  ipv6 address 2001:470:C8F2:A170::1/64
 !
@@ -116,17 +89,31 @@ interface Vlan250
  ip address 192.168.250.1 255.255.255.0
  ipv6 address 2001:470:C8F2:A190::1/64
 !
+ip classless
+ip route 0.0.0.0 0.0.0.0 192.168.250.254
 ip http server
 ip http secure-server
 !
-ip route 0.0.0.0 0.0.0.0 192.168.250.254
 !
-logging esm config
+ip access-list extended VLAN100-IN
+ permit udp any host 192.168.1.2 eq bootps
+ permit udp any host 192.168.1.2 eq domain
+ deny   ip any 192.168.0.0 0.0.255.255
+ permit ip any any
+ip access-list extended VLAN200-IN
+ permit udp any host 192.168.1.2 eq bootps
+ permit udp any host 192.168.1.2 eq domain
+ deny   ip any 192.168.0.0 0.0.255.255
+ permit ip any any
+!
 ipv6 route ::/0 2001:470:C8F2:A190::254
 !
 !
+control-plane
+!
 !
 line con 0
+ login
 line vty 0 4
  login
 line vty 5 15

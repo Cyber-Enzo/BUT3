@@ -1,10 +1,10 @@
 Building configuration...
 
-Current configuration : 2049 bytes
+Current configuration : 2388 bytes
 !
-! Last configuration change at 14:49:26 UTC Tue Sep 29 2026
-! NVRAM config last updated at 14:35:23 UTC Tue Sep 29 2026
-! NVRAM config last updated at 14:35:23 UTC Tue Sep 29 2026
+! Last configuration change at 14:59:58 UTC Wed Sep 30 2026
+! NVRAM config last updated at 15:00:00 UTC Wed Sep 30 2026
+! NVRAM config last updated at 15:00:00 UTC Wed Sep 30 2026
 version 15.1
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -60,6 +60,8 @@ interface Embedded-Service-Engine0/0
 !
 interface GigabitEthernet0/0
  ip address 192.168.250.254 255.255.255.0
+ ip access-group IN-LAN in
+ ip access-group OUT-LAN out
  ip nat inside
  ip virtual-reassembly in
  duplex auto
@@ -86,12 +88,20 @@ ip route 192.168.1.0 255.255.255.0 192.168.250.1
 ip route 192.168.100.0 255.255.255.0 192.168.250.1
 ip route 192.168.200.0 255.255.255.0 192.168.250.1
 !
+ip access-list extended IN-LAN
+ deny   tcp any host 192.168.250.254
+ permit tcp 192.168.0.0 0.0.255.255 any reflect RETOUR timeout 300
+ permit udp host 192.168.1.2 host 129.20.211.22 eq domain reflect RETOUR timeout 300
+ deny   ip any any log
+ip access-list extended OUT-LAN
+ evaluate RETOUR
+ deny   ip any any log
+!
 access-list 1 permit 192.168.0.0 0.0.255.255
 ipv6 route 2001:470:C8F2:A130::/64 2001:470:C8F2:A190::1
 ipv6 route 2001:470:C8F2:A150::/64 2001:470:C8F2:A190::1
 ipv6 route 2001:470:C8F2:A170::/64 2001:470:C8F2:A190::1
 ipv6 route ::/0 GigabitEthernet0/1 FE80::32E4:DBFF:FEB0:4428
-ipv6 route ::/0 GigabitEthernet0/1
 !
 !
 !
